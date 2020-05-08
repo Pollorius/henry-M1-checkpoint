@@ -43,8 +43,18 @@ const {
 // allí la recursión
 
 var objContains = function(obj, prop, value){
- 
+  for (property in obj ) {
+    if (typeof property === 'object' ) {
+      objContains();
+    }
+    if (this[prop] && this[prop[value]]) {
+      return true;
+    }
+    return false;
+  }
 }
+      
+
 
 
 // EJERCICIO 2
@@ -57,9 +67,19 @@ var objContains = function(obj, prop, value){
 // Pista: utilizar el método Array.isArray() para determinar si algun elemento de array es un array anidado
 // [Para más información del método: https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/isArray]
 
+var suma = 0;
 var countArray = function(array){
-  
+  if (array.length < 1) return 0;
+  for (var i = 0; i < array.length; i++) {
+    if (Array.isArray(array[i])){
+       countArray(array[i]);
+    } else {
+      suma = suma + array[i];
+    }
+  }
+  return suma; 
 }
+        
 
 // ---------------------
 
@@ -78,7 +98,16 @@ var countArray = function(array){
 //    lista.size(); --> 3
 
 LinkedList.prototype.size = function(){
- 
+  if (this.head === null) {
+    return 0;
+  }
+  var listSize = 1;
+  var current = this.head;
+  while (current.next !== null) {
+    current = current.next
+    listSize++
+  }
+  return listSize;
 }
 
 
@@ -99,7 +128,25 @@ LinkedList.prototype.size = function(){
 //    sin antes tener cargada la posición 0 y 1.
 
 LinkedList.prototype.addInPos = function(pos, value){
-  
+  var newNode = new Node(value);
+  if (this.head === null) {
+    return false;
+  }
+  if (this.size() >= pos) {
+    var current = this.head;
+    var counter = 0;
+    while (counter < pos - 1) {
+      current = current.next
+      counter++
+    }
+    var aux = current.next;
+    current.next = newNode;
+    current.next.next = aux;
+    return true;    
+  } else {
+    return false;
+  }
+
 }
 
 // EJERCICIO 5
@@ -110,8 +157,9 @@ LinkedList.prototype.addInPos = function(pos, value){
 //    Lista nueva luego de aplicar el reverse: Head --> 13 --> 10 --> 4 --> 1 --> null
 
 LinkedList.prototype.reverse = function(){
- 
+  
 }
+
 
 
 // ----------------------
@@ -137,11 +185,30 @@ LinkedList.prototype.reverse = function(){
 //    - mazoUserB = [6,9,10,3]
 //    Primer mano:
 //     A --> 4  vs  6 <-- B [6 > 4 entones gana la mano B y pone ambas cartas en su mazo, colocando primero la suya]
-//    - mazoUserA = [2,10,11]
-//    - mazoUserB = [6,9,10,3,6,4]
+//    - mazoUserA = [10,11]
+//    - mazoUserB = [10,3,6,4,9,2]
 
 var cardGame = function(mazoUserA, mazoUserB){
-
+    while (mazoUserA.size() !== 0 && mazoUserB.size() !== 0) {
+      var jugadaA = mazoUserA.dequeue();
+      var jugadaB = mazoUserB.dequeue();
+    if (jugadaA > jugadaB) {
+      mazoUserA.enqueue(jugadaA);
+      mazoUserA.enqueue(jugadaB);
+    } else if (jugadaB > jugadaA) {
+      mazoUserB.enqueue(jugadaB);
+      mazoUserB.enqueue(jugadaA);      
+    } 
+  }
+    if (mazoUserA.size() > mazoUserB.size()) {
+      return "A wins!";
+    }
+    if (mazoUserA.size() < mazoUserB.size()) {
+      return "B wins!";
+    }
+    if (mazoUserA.size() === mazoUserB.size()) {
+      return "Game tie!";
+    }
 }
 
 // ---------------
@@ -164,7 +231,11 @@ var cardGame = function(mazoUserA, mazoUserB){
 //       5
 
 var generateBST = function(array){
- 
+  var newBST = new BinarySearchTree();
+  for(var i = 0; i < array.length; i ++) {
+    newBST.insert(array[i]);
+  }
+  return newBST;
 }
 
 
@@ -185,8 +256,16 @@ var generateBST = function(array){
 
 
 var binarySearch = function (array, target) {
-
-  
+  var middle = Math.floor(array.length / 2)
+  if (array[middle] === target) {
+    return target - 1;
+  } else if (array[middle] < target && array.length > 1) {
+    return binarySearch(array.slice(middle), target);
+  } else if (array[middle] > target && array.length > 1) {
+    return binarySearch(array.slice(0, middle), target);
+  } else {
+    return -1;
+  }
 }
 
 // EJERCICIO 9
@@ -199,7 +278,20 @@ var binarySearch = function (array, target) {
 
 
 var selectionSort = function(array) {
-  
+  for (var i = 0; i < array.length; i ++) {
+    var min = i;
+    for (var j = i + 1; j < array.length; j ++) {
+      if (array[j] < array[min]){
+        min = j;
+      }
+    }
+    if (min !== i) {
+      var aux = array[i];
+      array[i] = array[min];
+      array[min] = aux;
+    }
+  }
+  return array;
 }
 
 // ----- Closures -----
@@ -217,7 +309,9 @@ var selectionSort = function(array) {
 //    sumaDiez(11); --> Devolverá 21 (Ya que 11 + 10 = 21)
 
 function closureSum(numFijo) {
- 
+  return function(otroNum) {
+    return numFijo + otroNum;
+  };
 }
 
 // -------------------
