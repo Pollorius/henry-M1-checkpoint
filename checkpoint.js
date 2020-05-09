@@ -45,9 +45,9 @@ const {
 var objContains = function(obj, prop, value){
   for (property in obj ) {
     if (typeof property === 'object' ) {
-      objContains();
+      objContains(property, prop, value);
     }
-    if (this[prop] && this[prop[value]]) {
+    if (this[prop] && this[prop][value]) {
       return true;
     }
     return false;
@@ -231,8 +231,8 @@ var cardGame = function(mazoUserA, mazoUserB){
 //       5
 
 var generateBST = function(array){
-  var newBST = new BinarySearchTree();
-  for(var i = 0; i < array.length; i ++) {
+  var newBST = new BinarySearchTree(array[0]);
+  for(var i = 1; i < array.length; i ++) {
     newBST.insert(array[i]);
   }
   return newBST;
@@ -327,7 +327,18 @@ function closureSum(numFijo) {
 //    console.log(anagrams); // [ 'abc', 'acb', 'bac', 'bca', 'cab', 'cba' ]
 
 var allAnagrams = function(string, array, index) {
- 
+  var anagrams = [];
+  var anarray = string.split()
+  anarray.forEach(function(str) {
+    var recurse = function(ana, str) {
+        if (str === '') 
+            anagrams[ana] = 1;
+        for (var i = 0; i < str.length; i++)
+            recurse(ana + str[i], str.slice(0, i) + str.slice(i + 1));
+    };
+    recurse('', str);
+  });
+  return Object.keys(anagrams);
 };
 
 module.exports = {
