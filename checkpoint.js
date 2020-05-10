@@ -44,14 +44,14 @@ const {
 
 var objContains = function(obj, prop, value){
   for (property in obj ) {
-    if (typeof property === 'object' ) {
-      objContains(property, prop, value);
+    if (typeof obj[property] === 'object' ) {
+      return objContains(obj[property], prop, value);
     }
-    if (this[prop] && this[prop][value]) {
+    if (obj[prop] && obj[prop] === value) {
       return true;
     }
-    return false;
   }
+  return false;
 }
       
 
@@ -157,7 +157,19 @@ LinkedList.prototype.addInPos = function(pos, value){
 //    Lista nueva luego de aplicar el reverse: Head --> 13 --> 10 --> 4 --> 1 --> null
 
 LinkedList.prototype.reverse = function(){
-  
+  var array = [];
+  var current = this.head;
+  var counter = 0
+  while (counter < this.size()) {
+    array.unshift(current.value);
+    current = current.next;
+    counter++;
+  }
+  var revList = new LinkedList();
+  for (let i = 0; i < array.length; i ++) {
+    revList.add(array[i])    
+  }
+  return revList;
 }
 
 
